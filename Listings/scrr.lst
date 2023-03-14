@@ -1,0 +1,430 @@
+
+
+
+ARM Macro Assembler    Page 1 
+
+
+    1 00000000         ;LABEL   DIRECTIVE VALUE    COMMENT 
+    2 00000000                 AREA             screen, CODE, READONLY, ALIGN=2
+    3 00000000                 THUMB
+    4 00000000         
+    5 00000000                 IMPORT           SCREEN_INIT
+    6 00000000                 IMPORT           SCR_XY
+    7 00000000                 IMPORT           SCR_CHAR
+    8 00000000         
+    9 00000000         
+   10 00000000         
+   11 00000000                 EXPORT           DISPLAY_TEMP
+   12 00000000                 EXPORT           DISPLAY_RANGE
+   13 00000000                 EXPORT           SCRR
+   14 00000000         ;-------------------------------------------------------
+                       --
+   15 00000000         ; 3.3V   (VCC) connected to 3.3V
+   16 00000000         ; Ground   (GND) CONNECTED TO GND
+   17 00000000         ; SSI2Fss    (SCE) connected to PB5
+   18 00000000         ; Reset          (RST) connected to PB2
+   19 00000000         ; Data/Command   (D/C) connected to PB3
+   20 00000000         ; SSI0Tx         (DN)  connected to PB7
+   21 00000000         ; SSI0Clk        (SCL) connected to PB4
+   22 00000000         ; back light     (LED) connected to VCC
+   23 00000000         ;-------------------------------------------------------
+                       ---
+   24 00000000         
+   25 00000000         
+   26 00000000         SCRR    PROC
+   27 00000000 B500            PUSH             {LR}
+   28 00000002         
+   29 00000002         ;THESE WILL BE ON THE SCREEN ALL THE TIME
+   30 00000002 F04F 0000       MOV              R0,#0X00
+   31 00000006 F04F 0100       MOV              R1,#0X00
+   32 0000000A F7FF FFFE       BL               SCR_XY      ;SET CURSOR TO THE 
+                                                            BEGINNING
+   33 0000000E         
+   34 0000000E F04F 0554       MOV              R5,#0X54    ;T
+   35 00000012 F7FF FFFE       BL               SCR_CHAR
+   36 00000016 F04F 0565       MOV              R5,#0X65    ;e
+   37 0000001A F7FF FFFE       BL               SCR_CHAR
+   38 0000001E F04F 056D       MOV              R5,#0X6D    ;m
+   39 00000022 F7FF FFFE       BL               SCR_CHAR
+   40 00000026 F04F 0570       MOV              R5,#0X70    ;p
+   41 0000002A F7FF FFFE       BL               SCR_CHAR
+   42 0000002E F04F 0565       MOV              R5,#0X65    ;e
+   43 00000032 F7FF FFFE       BL               SCR_CHAR
+   44 00000036 F04F 0572       MOV              R5,#0X72    ;r
+   45 0000003A F7FF FFFE       BL               SCR_CHAR
+   46 0000003E F04F 0561       MOV              R5,#0X61    ;a
+   47 00000042 F7FF FFFE       BL               SCR_CHAR
+   48 00000046 F04F 0574       MOV              R5,#0X74    ;t
+   49 0000004A F7FF FFFE       BL               SCR_CHAR
+   50 0000004E F04F 0575       MOV              R5,#0X75    ;u
+   51 00000052 F7FF FFFE       BL               SCR_CHAR
+   52 00000056 F04F 0572       MOV              R5,#0X72    ;r
+   53 0000005A F7FF FFFE       BL               SCR_CHAR
+   54 0000005E F04F 0565       MOV              R5,#0X65    ;e
+   55 00000062 F7FF FFFE       BL               SCR_CHAR
+   56 00000066 F04F 053A       MOV              R5,#0X3A    ;:
+
+
+
+ARM Macro Assembler    Page 2 
+
+
+   57 0000006A F7FF FFFE       BL               SCR_CHAR
+   58 0000006E F04F 0520       MOV              R5,#0X20    ;SPACE
+   59 00000072 F7FF FFFE       BL               SCR_CHAR
+   60 00000076         
+   61 00000076 F04F 0024       MOV              R0,#0X24    ;
+   62 0000007A F04F 0101       MOV              R1,#0X1
+   63 0000007E F7FF FFFE       BL               SCR_XY      ;SET CURSOR TO THE 
+                                                            NEARLY END OF THE R
+                                                            OW
+   64 00000082         
+   65 00000082 F04F 0543       MOV              R5,#0X43    ;C
+   66 00000086 F7FF FFFE       BL               SCR_CHAR
+   67 0000008A F04F 0565       MOV              R5,#0X65    ;e
+   68 0000008E F7FF FFFE       BL               SCR_CHAR
+   69 00000092 F04F 056C       MOV              R5,#0X6C    ;l
+   70 00000096 F7FF FFFE       BL               SCR_CHAR
+   71 0000009A F04F 0563       MOV              R5,#0X63    ;c
+   72 0000009E F7FF FFFE       BL               SCR_CHAR
+   73 000000A2 F04F 0569       MOV              R5,#0X69    ;i
+   74 000000A6 F7FF FFFE       BL               SCR_CHAR
+   75 000000AA F04F 0575       MOV              R5,#0X75    ;u
+   76 000000AE F7FF FFFE       BL               SCR_CHAR
+   77 000000B2 F04F 0573       MOV              R5,#0X73    ;s
+   78 000000B6 F7FF FFFE       BL               SCR_CHAR
+   79 000000BA         
+   80 000000BA         
+   81 000000BA F04F 0000       MOV              R0,#0X00
+   82 000000BE F04F 0103       MOV              R1,#0X03
+   83 000000C2 F7FF FFFE       BL               SCR_XY      ;SET CURSOR TO THE 
+                                                            START OF ROW1
+   84 000000C6         
+   85 000000C6         
+   86 000000C6 F04F 0552       MOV              R5,#0X52    ;R
+   87 000000CA F7FF FFFE       BL               SCR_CHAR
+   88 000000CE F04F 0561       MOV              R5,#0X61    ;a
+   89 000000D2 F7FF FFFE       BL               SCR_CHAR
+   90 000000D6 F04F 056E       MOV              R5,#0X6E    ;n
+   91 000000DA F7FF FFFE       BL               SCR_CHAR
+   92 000000DE F04F 0567       MOV              R5,#0X67    ;g
+   93 000000E2 F7FF FFFE       BL               SCR_CHAR
+   94 000000E6 F04F 0565       MOV              R5,#0X65    ;e
+   95 000000EA F7FF FFFE       BL               SCR_CHAR
+   96 000000EE F04F 053A       MOV              R5,#0X3A    ;:
+   97 000000F2 F7FF FFFE       BL               SCR_CHAR
+   98 000000F6 F04F 0520       MOV              R5,#0X20    ;SPACE
+   99 000000FA F7FF FFFE       BL               SCR_CHAR
+  100 000000FE         
+  101 000000FE F04F 0024       MOV              R0,#0X24    ; RANGE IS SHORTER 
+                                                            MAY NOT NEED 
+  102 00000102 F04F 0105       MOV              R1,#0X05
+  103 00000106 F7FF FFFE       BL               SCR_XY      ;SET CURSOR TO THE 
+                                                            END OF THE ROW
+  104 0000010A         
+  105 0000010A F04F 0543       MOV              R5,#0X43    ;C
+  106 0000010E F7FF FFFE       BL               SCR_CHAR
+  107 00000112 F04F 0565       MOV              R5,#0X65    ;e
+  108 00000116 F7FF FFFE       BL               SCR_CHAR
+  109 0000011A F04F 056C       MOV              R5,#0X6C    ;l
+  110 0000011E F7FF FFFE       BL               SCR_CHAR
+
+
+
+ARM Macro Assembler    Page 3 
+
+
+  111 00000122 F04F 0563       MOV              R5,#0X63    ;c
+  112 00000126 F7FF FFFE       BL               SCR_CHAR
+  113 0000012A F04F 0569       MOV              R5,#0X69    ;i
+  114 0000012E F7FF FFFE       BL               SCR_CHAR
+  115 00000132 F04F 0575       MOV              R5,#0X75    ;u
+  116 00000136 F7FF FFFE       BL               SCR_CHAR
+  117 0000013A F04F 0573       MOV              R5,#0X73    ;s
+  118 0000013E F7FF FFFE       BL               SCR_CHAR
+  119 00000142         
+  120 00000142         
+  121 00000142 F85D EB04       POP              {LR}
+  122 00000146 4770            BX               LR
+  123 00000148                 ENDP
+  124 00000148         
+  125 00000148         ;///////////////////////////////////////////////////////
+                       ////////;    
+  126 00000148         
+  127 00000148         DISPLAY_TEMP
+                               PROC
+  128 00000148 B580            PUSH             {LR,R7}
+  129 0000014A         
+  130 0000014A         
+  131 0000014A         ;DISPLAY TEMPERATURE
+  132 0000014A         
+  133 0000014A 4607            MOV              R7,R0       ;DATA FROM C PART
+  134 0000014C F04F 0000       MOV              R0,#0X00    ;TEMP PART POINT
+  135 00000150 F04F 0101       MOV              R1,#0X01
+  136 00000154 F7FF FFFE       BL               SCR_XY
+  137 00000158 F04F 0064       MOV              R0,#0X64    ;DIVIDE BY 100 THEN
+                                                             MULTIPLY BY 100 TO
+                                                             GET THE FIRST DIGI
+                                                            T
+  138 0000015C FBB7 F5F0       UDIV             R5, R7, R0
+  139 00000160 FB05 F100       MUL              R1, R5, R0
+  140 00000164 EBA7 0701       SUB              R7, R1
+  141 00000168 F105 0530       ADD              R5, #0X30   ;CONVERT TO ASCII (
+                                                            0x30 ??????????????
+                                                            ???)hata olursa deg
+                                                            isebilir
+  142 0000016C F7FF FFFE       BL               SCR_CHAR
+  143 00000170 F04F 000A       MOV              R0, #0X0A   ;DIVIDE BY 10 THEN 
+                                                            MULTIPLY BY 10 TO G
+                                                            ET THE SECOND DIGIT
+                                                             JUST TO PATTERN MI
+                                                            GHT BE SHORTENED
+  144 00000174 FBB7 F5F0       UDIV             R5, R7, R0
+  145 00000178 FB05 F100       MUL              R1, R5, R0
+  146 0000017C EBA7 0701       SUB              R7, R1
+  147 00000180 F105 0530       ADD              R5, #0X30   ;CONVERT TO ASCII
+  148 00000184 F7FF FFFE       BL               SCR_CHAR
+  149 00000188 F04F 052E       MOV              R5,#0X2E
+  150 0000018C F7FF FFFE       BL               SCR_CHAR
+  151 00000190         
+  152 00000190 463D            CPY              R5,R7       ;THIRD DIGIT
+  153 00000192 F105 0530       ADD              R5, #0X30   ;CONVERT TO ASCII
+  154 00000196 F7FF FFFE       BL               SCR_CHAR
+  155 0000019A         
+  156 0000019A E8BD 4080       POP              {LR,R7}
+  157 0000019E 4770            BX               LR
+
+
+
+ARM Macro Assembler    Page 4 
+
+
+  158 000001A0                 ENDP
+  159 000001A0         ;///////////////////////////////////////////////////////
+                       ////////; 
+  160 000001A0         DISPLAY_RANGE
+                               PROC
+  161 000001A0 E92D 4180       PUSH             {LR,R7,R8}
+  162 000001A4         
+  163 000001A4         
+  164 000001A4         ;DISPLAY TEMPERATURE RANGE
+  165 000001A4         
+  166 000001A4 4607            MOV              R7,R0       ;DATA FROM C PART L
+                                                            OW RANGE
+  167 000001A6 4688            MOV              R8,R1       ;HIGH RANGE
+  168 000001A8 F04F 0000       MOV              R0,#0X00    ;RANGE XY PT 
+  169 000001AC F04F 0104       MOV              R1,#0X04
+  170 000001B0 F7FF FFFE       BL               SCR_XY
+  171 000001B4 F04F 0064       MOV              R0,#0X64    ;DIVIDE BY 100 THEN
+                                                             MULTIPLY BY 100 TO
+                                                             GET THE FIRST DIGI
+                                                            T
+  172 000001B8 FBB7 F5F0       UDIV             R5, R7, R0
+  173 000001BC FB05 F100       MUL              R1, R5, R0
+  174 000001C0 EBA7 0701       SUB              R7, R1
+  175 000001C4 F105 0530       ADD              R5, #0X30   ;CONVERT TO ASCII (
+                                                            0x30 ??????????????
+                                                            ???)hata olursa deg
+                                                            isebilir
+  176 000001C8 F7FF FFFE       BL               SCR_CHAR
+  177 000001CC F04F 000A       MOV              R0, #0X0A   ;DIVIDE BY 1 THEN M
+                                                            ULTIPLY BY 1 TO GET
+                                                             THE SECOND DIGIT J
+                                                            UST TO PATTERN MIGH
+                                                            T BE SHORTENED
+  178 000001D0 FBB7 F5F0       UDIV             R5, R7, R0
+  179 000001D4 FB05 F100       MUL              R1, R5, R0
+  180 000001D8 EBA7 0701       SUB              R7, R1
+  181 000001DC F105 0530       ADD              R5, #0X30   ;CONVERT TO ASCII
+  182 000001E0 F7FF FFFE       BL               SCR_CHAR
+  183 000001E4 F04F 052E       MOV              R5,#0X2E    ; ADD "." PT FOR 1 
+                                                            POINT AFTER DECIMAL
+                                                            
+  184 000001E8 F7FF FFFE       BL               SCR_CHAR
+  185 000001EC 463D            CPY              R5,R7       ;THIRD DIGIT
+  186 000001EE F105 0530       ADD              R5, #0X30   ;CONVERT TO ASCII
+  187 000001F2 F7FF FFFE       BL               SCR_CHAR
+  188 000001F6         
+  189 000001F6 F04F 052D       MOV              R5,#0X2D    ; ADD "-" PT FOR LO
+                                                            W - HIGH DISCRIMINA
+                                                            TION
+  190 000001FA F7FF FFFE       BL               SCR_CHAR
+  191 000001FE         
+  192 000001FE         
+  193 000001FE F04F 0064       MOV              R0,#0X64    ;DIVIDE BY 100 THEN
+                                                             MULTIPLY BY 100 TO
+                                                             GET THE FIRST DIGI
+                                                            T
+  194 00000202 FBB8 F5F0       UDIV             R5, R8, R0
+  195 00000206 FB05 F100       MUL              R1, R5, R0
+  196 0000020A EBA8 0801       SUB              R8, R1
+
+
+
+ARM Macro Assembler    Page 5 
+
+
+  197 0000020E F105 0530       ADD              R5, #0X30   ;CONVERT TO ASCII (
+                                                            0x30 ??????????????
+                                                            ???)hata olursa deg
+                                                            isebilir
+  198 00000212 F7FF FFFE       BL               SCR_CHAR
+  199 00000216 F04F 000A       MOV              R0, #0X0A   ;DIVIDE BY 1 THEN M
+                                                            ULTIPLY BY 1 TO GET
+                                                             THE SECOND DIGIT J
+                                                            UST TO PATTERN MIGH
+                                                            T BE SHORTENED
+  200 0000021A FBB8 F5F0       UDIV             R5, R8, R0
+  201 0000021E FB05 F100       MUL              R1, R5, R0
+  202 00000222 EBA8 0801       SUB              R8, R1
+  203 00000226 F105 0530       ADD              R5, #0X30   ;CONVERT TO ASCII
+  204 0000022A F7FF FFFE       BL               SCR_CHAR
+  205 0000022E F04F 052E       MOV              R5,#0X2E    ; ADD "." PT FOR 1 
+                                                            POINT AFTER DECIMAL
+                                                            
+  206 00000232 F7FF FFFE       BL               SCR_CHAR
+  207 00000236 4645            CPY              R5,R8       ;THIRD DIGIT
+  208 00000238 F105 0530       ADD              R5, #0X30   ;CONVERT TO ASCII
+  209 0000023C F7FF FFFE       BL               SCR_CHAR
+  210 00000240         
+  211 00000240 E8BD 4180       POP              {LR,R7,R8}
+  212 00000244 4770            BX               LR
+  213 00000246                 ENDP
+  214 00000246         
+  215 00000246         
+  216 00000246         
+  217 00000246                 END
+Command Line: --debug --xref --diag_suppress=9931 --cpu=Cortex-M4.fp --apcs=int
+erwork --depend=.\objects\scrr.d -o.\objects\scrr.o -IC:\Users\user\Desktop\DEN
+EME4\trial\RTE -IC:\Keil_v5\ARM\PACK\ARM\CMSIS\5.0.0-Beta12\CMSIS\Include -IC:\
+Keil_v5\ARM\PACK\Keil\TM4C_DFP\1.1.0\Device\Include\TM4C123 --predefine="__EVAL
+ SETA 1" --predefine="__UVISION_VERSION SETA 521" --predefine="_RTE_ SETA 1" --
+predefine="TM4C123GH6PM SETA 1" --list=.\listings\scrr.lst SCRR.s
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+Relocatable symbols
+
+DISPLAY_RANGE 000001A0
+
+Symbol: DISPLAY_RANGE
+   Definitions
+      At line 160 in file SCRR.s
+   Uses
+      At line 12 in file SCRR.s
+Comment: DISPLAY_RANGE used once
+DISPLAY_TEMP 00000148
+
+Symbol: DISPLAY_TEMP
+   Definitions
+      At line 127 in file SCRR.s
+   Uses
+      At line 11 in file SCRR.s
+Comment: DISPLAY_TEMP used once
+SCRR 00000000
+
+Symbol: SCRR
+   Definitions
+      At line 26 in file SCRR.s
+   Uses
+      At line 13 in file SCRR.s
+Comment: SCRR used once
+screen 00000000
+
+Symbol: screen
+   Definitions
+      At line 2 in file SCRR.s
+   Uses
+      None
+Comment: screen unused
+4 symbols
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+External symbols
+
+SCREEN_INIT 00000000
+
+Symbol: SCREEN_INIT
+   Definitions
+      At line 5 in file SCRR.s
+   Uses
+      None
+Comment: SCREEN_INIT unused
+SCR_CHAR 00000000
+
+Symbol: SCR_CHAR
+   Definitions
+      At line 7 in file SCRR.s
+   Uses
+      At line 35 in file SCRR.s
+      At line 37 in file SCRR.s
+      At line 39 in file SCRR.s
+      At line 41 in file SCRR.s
+      At line 43 in file SCRR.s
+      At line 45 in file SCRR.s
+      At line 47 in file SCRR.s
+      At line 49 in file SCRR.s
+      At line 51 in file SCRR.s
+      At line 53 in file SCRR.s
+      At line 55 in file SCRR.s
+      At line 57 in file SCRR.s
+      At line 59 in file SCRR.s
+      At line 66 in file SCRR.s
+      At line 68 in file SCRR.s
+      At line 70 in file SCRR.s
+      At line 72 in file SCRR.s
+      At line 74 in file SCRR.s
+      At line 76 in file SCRR.s
+      At line 78 in file SCRR.s
+      At line 87 in file SCRR.s
+      At line 89 in file SCRR.s
+      At line 91 in file SCRR.s
+      At line 93 in file SCRR.s
+      At line 95 in file SCRR.s
+      At line 97 in file SCRR.s
+      At line 99 in file SCRR.s
+      At line 106 in file SCRR.s
+      At line 108 in file SCRR.s
+      At line 110 in file SCRR.s
+      At line 112 in file SCRR.s
+      At line 114 in file SCRR.s
+      At line 116 in file SCRR.s
+      At line 118 in file SCRR.s
+      At line 142 in file SCRR.s
+      At line 148 in file SCRR.s
+      At line 150 in file SCRR.s
+      At line 154 in file SCRR.s
+      At line 176 in file SCRR.s
+      At line 182 in file SCRR.s
+      At line 184 in file SCRR.s
+      At line 187 in file SCRR.s
+      At line 190 in file SCRR.s
+      At line 198 in file SCRR.s
+      At line 204 in file SCRR.s
+
+
+
+ARM Macro Assembler    Page 2 Alphabetic symbol ordering
+External symbols
+
+      At line 206 in file SCRR.s
+      At line 209 in file SCRR.s
+
+SCR_XY 00000000
+
+Symbol: SCR_XY
+   Definitions
+      At line 6 in file SCRR.s
+   Uses
+      At line 32 in file SCRR.s
+      At line 63 in file SCRR.s
+      At line 83 in file SCRR.s
+      At line 103 in file SCRR.s
+      At line 136 in file SCRR.s
+      At line 170 in file SCRR.s
+
+3 symbols
+342 symbols in table
