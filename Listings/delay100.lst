@@ -1,0 +1,70 @@
+
+
+
+ARM Macro Assembler    Page 1 
+
+
+    1 00000000                 AREA             DELAY100, READONLY, CODE
+    2 00000000                 THUMB
+    3 00000000                 EXPORT           DELAY100
+    4 00000000         
+    5 00000000         __DELAY100
+                               PROC
+    6 00000000 B401            PUSH             {R0}
+    7 00000002 F641 2080 
+              F2C0 0006        MOV32            R0,#400000  ; Clock Freq 16 MHz
+                                                            . We created 6 cycl
+                                                            e loop (1+1+1+3).
+    8 0000000A 3801    loop    SUBS             R0,#1       ; 1 Machine Cycle =
+                                                             1/16 = 0.0625 us
+    9 0000000C BF00            NOP                          ; 6 * 1 Machine Cyc
+                                                            le = 0.375
+   10 0000000E 2800            CMP              R0,#0       ; 150ms = 150000,  
+                                                            150000/ 0.375  = 40
+                                                            0000. Hence, we set
+                                                             R0 = 400000
+   11 00000010 D1FB            BNE              loop
+   12 00000012 BC01            POP              {R0}
+   13 00000014 4770            BX               LR
+   14 00000016         
+   15 00000016                 ENDP
+   16 00000016                 END
+Command Line: --debug --xref --diag_suppress=9931 --cpu=Cortex-M4.fp --apcs=int
+erwork --depend=.\objects\delay100.d -o.\objects\delay100.o -IC:\Users\user\Des
+ktop\DENEME4\trial\RTE -IC:\Keil_v5\ARM\PACK\ARM\CMSIS\5.0.0-Beta12\CMSIS\Inclu
+de -IC:\Keil_v5\ARM\PACK\Keil\TM4C_DFP\1.1.0\Device\Include\TM4C123 --predefine
+="__EVAL SETA 1" --predefine="__UVISION_VERSION SETA 521" --predefine="_RTE_ SE
+TA 1" --predefine="TM4C123GH6PM SETA 1" --list=.\listings\delay100.lst DELAY100
+.s
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+Relocatable symbols
+
+DELAY100 00000000
+
+Symbol: DELAY100
+   Definitions
+      At line 1 in file DELAY100.s
+   Uses
+      At line 3 in file DELAY100.s
+Comment: DELAY100 used once
+__DELAY100 00000000
+
+Symbol: __DELAY100
+   Definitions
+      At line 5 in file DELAY100.s
+   Uses
+      None
+Comment: __DELAY100 unused
+loop 0000000A
+
+Symbol: loop
+   Definitions
+      At line 8 in file DELAY100.s
+   Uses
+      At line 11 in file DELAY100.s
+Comment: loop used once
+3 symbols
+338 symbols in table

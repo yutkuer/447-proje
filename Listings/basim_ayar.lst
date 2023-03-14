@@ -1,0 +1,590 @@
+
+
+
+ARM Macro Assembler    Page 1 
+
+
+    1 00000000         ; Pin connections
+    2 00000000         ; ------------------------------------------
+    3 00000000         ; 3.3V   (VCC) connected to 3.3V
+    4 00000000         ; Ground   (GND) CONNECTED TO GND
+    5 00000000         ; SSI2Fss    (SCE) connected to PA3
+    6 00000000         ; Reset          (RST) connected to PB2
+    7 00000000         ; Data/Command   (D/C) connected to PB3
+    8 00000000         ; SSI0Tx         (DN)  connected to PA5
+    9 00000000         ; SSI0Clk        (SCL) connected to PA2
+   10 00000000         ; back light     (LED) connected to VCC
+   11 00000000         ;----------------------------------------------
+   12 00000000 400043FC 
+                       GPIO_PORTB_DATA
+                               EQU              0x400043FC  ; Port B Data
+   13 00000000 40008008 
+                       SSI2_DR EQU              0x40008008  ; DATA
+   14 00000000 4000800C 
+                       SSI2_SR EQU              0x4000800C  ; STATUS
+   15 00000000         
+   16 00000000         ;LABEL   DIRECTIVE VALUE    COMMENT 
+   17 00000000                 AREA             screen, CODE, READONLY, ALIGN=2
+   18 00000000                 THUMB
+   19 00000000         
+   20 00000000                 EXPORT           SCR_XY
+   21 00000000                 EXPORT           SCR_CHAR
+   22 00000000                 EXPORT           SCR_BYTE
+   23 00000000         
+   24 00000000         
+   25 00000000         
+   26 00000000         
+   27 00000000         ; ASCII table for characters to be displayed
+   28 00000000 00 00 00 
+              00 00    ASCII   DCB              0x00, 0x00, 0x00, 0x00, 0x00 
+                                                            ;// 20
+   29 00000005 00 00 5F 
+              00 00            DCB              0x00, 0x00, 0x5f, 0x00, 0x00 
+                                                            ;// 21 !
+   30 0000000A 00 07 00 
+              07 00            DCB              0x00, 0x07, 0x00, 0x07, 0x00 
+                                                            ;// 22 "
+   31 0000000F 14 7F 14 
+              7F 14            DCB              0x14, 0x7f, 0x14, 0x7f, 0x14 
+                                                            ;// 23 #
+   32 00000014 24 2A 7F 
+              2A 12            DCB              0x24, 0x2a, 0x7f, 0x2a, 0x12 
+                                                            ;// 24 $
+   33 00000019 23 13 08 
+              64 62            DCB              0x23, 0x13, 0x08, 0x64, 0x62 
+                                                            ;// 25 %
+   34 0000001E 36 49 55 
+              22 50            DCB              0x36, 0x49, 0x55, 0x22, 0x50 
+                                                            ;// 26 &
+   35 00000023 00 05 03 
+              00 00            DCB              0x00, 0x05, 0x03, 0x00, 0x00 
+                                                            ;// 27 '
+   36 00000028 00 1C 22 
+              41 00            DCB              0x00, 0x1c, 0x22, 0x41, 0x00 
+                                                            ;// 28 (
+   37 0000002D 00 41 22 
+
+
+
+ARM Macro Assembler    Page 2 
+
+
+              1C 00            DCB              0x00, 0x41, 0x22, 0x1c, 0x00 
+                                                            ;// 29 )
+   38 00000032 14 08 3E 
+              08 14            DCB              0x14, 0x08, 0x3e, 0x08, 0x14 
+                                                            ;// 2a *
+   39 00000037 08 08 3E 
+              08 08            DCB              0x08, 0x08, 0x3e, 0x08, 0x08 
+                                                            ;// 2b +
+   40 0000003C 00 50 30 
+              00 00            DCB              0x00, 0x50, 0x30, 0x00, 0x00 
+                                                            ;// 2c ,
+   41 00000041 08 08 08 
+              08 08            DCB              0x08, 0x08, 0x08, 0x08, 0x08 
+                                                            ;// 2d -
+   42 00000046 00 60 60 
+              00 00            DCB              0x00, 0x60, 0x60, 0x00, 0x00 
+                                                            ;// 2e .
+   43 0000004B 20 10 08 
+              04 02            DCB              0x20, 0x10, 0x08, 0x04, 0x02 
+                                                            ;// 2f /
+   44 00000050 3E 51 49 
+              45 3E            DCB              0x3e, 0x51, 0x49, 0x45, 0x3e 
+                                                            ;// 30 0
+   45 00000055 00 42 7F 
+              40 00            DCB              0x00, 0x42, 0x7f, 0x40, 0x00 
+                                                            ;// 31 1
+   46 0000005A 42 61 51 
+              49 46            DCB              0x42, 0x61, 0x51, 0x49, 0x46 
+                                                            ;// 32 2
+   47 0000005F 21 41 45 
+              4B 31            DCB              0x21, 0x41, 0x45, 0x4b, 0x31 
+                                                            ;// 33 3
+   48 00000064 18 14 12 
+              7F 10            DCB              0x18, 0x14, 0x12, 0x7f, 0x10 
+                                                            ;// 34 4
+   49 00000069 27 45 45 
+              45 39            DCB              0x27, 0x45, 0x45, 0x45, 0x39 
+                                                            ;// 35 5
+   50 0000006E 3C 4A 49 
+              49 30            DCB              0x3c, 0x4a, 0x49, 0x49, 0x30 
+                                                            ;// 36 6
+   51 00000073 01 71 09 
+              05 03            DCB              0x01, 0x71, 0x09, 0x05, 0x03 
+                                                            ;// 37 7
+   52 00000078 36 49 49 
+              49 36            DCB              0x36, 0x49, 0x49, 0x49, 0x36 
+                                                            ;// 38 8
+   53 0000007D 06 49 49 
+              29 1E            DCB              0x06, 0x49, 0x49, 0x29, 0x1e 
+                                                            ;// 39 9
+   54 00000082 00 36 36 
+              00 00            DCB              0x00, 0x36, 0x36, 0x00, 0x00 
+                                                            ;// 3a :
+   55 00000087 00 56 36 
+              00 00            DCB              0x00, 0x56, 0x36, 0x00, 0x00 
+                                                            ;// 3b ;
+   56 0000008C 08 14 22 
+              41 00            DCB              0x08, 0x14, 0x22, 0x41, 0x00 
+                                                            ;// 3c <
+
+
+
+ARM Macro Assembler    Page 3 
+
+
+   57 00000091 14 14 14 
+              14 14            DCB              0x14, 0x14, 0x14, 0x14, 0x14 
+                                                            ;// 3d =
+   58 00000096 00 41 22 
+              14 08            DCB              0x00, 0x41, 0x22, 0x14, 0x08 
+                                                            ;// 3e >
+   59 0000009B 02 01 51 
+              09 06            DCB              0x02, 0x01, 0x51, 0x09, 0x06 
+                                                            ;// 3f ?
+   60 000000A0 32 49 79 
+              41 3E            DCB              0x32, 0x49, 0x79, 0x41, 0x3e 
+                                                            ;// 40 @
+   61 000000A5 7E 11 11 
+              11 7E            DCB              0x7e, 0x11, 0x11, 0x11, 0x7e 
+                                                            ;// 41 A
+   62 000000AA 7F 49 49 
+              49 36            DCB              0x7f, 0x49, 0x49, 0x49, 0x36 
+                                                            ;// 42 B
+   63 000000AF 3E 41 41 
+              41 22            DCB              0x3e, 0x41, 0x41, 0x41, 0x22 
+                                                            ;// 43 C
+   64 000000B4 7F 41 41 
+              22 1C            DCB              0x7f, 0x41, 0x41, 0x22, 0x1c 
+                                                            ;// 44 D
+   65 000000B9 7F 49 49 
+              49 41            DCB              0x7f, 0x49, 0x49, 0x49, 0x41 
+                                                            ;// 45 E
+   66 000000BE 7F 09 09 
+              09 01            DCB              0x7f, 0x09, 0x09, 0x09, 0x01 
+                                                            ;// 46 F
+   67 000000C3 3E 41 49 
+              49 7A            DCB              0x3e, 0x41, 0x49, 0x49, 0x7a 
+                                                            ;// 47 G
+   68 000000C8 7F 08 08 
+              08 7F            DCB              0x7f, 0x08, 0x08, 0x08, 0x7f 
+                                                            ;// 48 H
+   69 000000CD 00 41 7F 
+              41 00            DCB              0x00, 0x41, 0x7f, 0x41, 0x00 
+                                                            ;// 49 I
+   70 000000D2 20 40 41 
+              3F 01            DCB              0x20, 0x40, 0x41, 0x3f, 0x01 
+                                                            ;// 4a J
+   71 000000D7 7F 08 14 
+              22 41            DCB              0x7f, 0x08, 0x14, 0x22, 0x41 
+                                                            ;// 4b K
+   72 000000DC 7F 40 40 
+              40 40            DCB              0x7f, 0x40, 0x40, 0x40, 0x40 
+                                                            ;// 4c L
+   73 000000E1 7F 02 0C 
+              02 7F            DCB              0x7f, 0x02, 0x0c, 0x02, 0x7f 
+                                                            ;// 4d M
+   74 000000E6 7F 04 08 
+              10 7F            DCB              0x7f, 0x04, 0x08, 0x10, 0x7f 
+                                                            ;// 4e N
+   75 000000EB 3E 41 41 
+              41 3E            DCB              0x3e, 0x41, 0x41, 0x41, 0x3e 
+                                                            ;// 4f O
+   76 000000F0 7F 09 09 
+              09 06            DCB              0x7f, 0x09, 0x09, 0x09, 0x06 
+
+
+
+ARM Macro Assembler    Page 4 
+
+
+                                                            ;// 50 P
+   77 000000F5 3E 41 51 
+              21 5E            DCB              0x3e, 0x41, 0x51, 0x21, 0x5e 
+                                                            ;// 51 Q
+   78 000000FA 7F 09 19 
+              29 46            DCB              0x7f, 0x09, 0x19, 0x29, 0x46 
+                                                            ;// 52 R
+   79 000000FF 46 49 49 
+              49 31            DCB              0x46, 0x49, 0x49, 0x49, 0x31 
+                                                            ;// 53 S
+   80 00000104 01 01 7F 
+              01 01            DCB              0x01, 0x01, 0x7f, 0x01, 0x01 
+                                                            ;// 54 T
+   81 00000109 3F 40 40 
+              40 3F            DCB              0x3f, 0x40, 0x40, 0x40, 0x3f 
+                                                            ;// 55 U
+   82 0000010E 1F 20 40 
+              20 1F            DCB              0x1f, 0x20, 0x40, 0x20, 0x1f 
+                                                            ;// 56 V
+   83 00000113 3F 40 38 
+              40 3F            DCB              0x3f, 0x40, 0x38, 0x40, 0x3f 
+                                                            ;// 57 W
+   84 00000118 63 14 08 
+              14 63            DCB              0x63, 0x14, 0x08, 0x14, 0x63 
+                                                            ;// 58 X
+   85 0000011D 07 08 70 
+              08 07            DCB              0x07, 0x08, 0x70, 0x08, 0x07 
+                                                            ;// 59 Y
+   86 00000122 61 51 49 
+              45 43            DCB              0x61, 0x51, 0x49, 0x45, 0x43 
+                                                            ;// 5a Z
+   87 00000127 00 7F 41 
+              41 00            DCB              0x00, 0x7f, 0x41, 0x41, 0x00 
+                                                            ;// 5b [
+   88 0000012C 02 04 08 
+              10 20            DCB              0x02, 0x04, 0x08, 0x10, 0x20 
+                                                            ;// 5c '\'
+   89 00000131 00 41 41 
+              7F 00            DCB              0x00, 0x41, 0x41, 0x7f, 0x00 
+                                                            ;// 5d ]
+   90 00000136 04 02 01 
+              02 04            DCB              0x04, 0x02, 0x01, 0x02, 0x04 
+                                                            ;// 5e ^
+   91 0000013B 40 40 40 
+              40 40            DCB              0x40, 0x40, 0x40, 0x40, 0x40 
+                                                            ;// 5f _
+   92 00000140 00 01 02 
+              04 00            DCB              0x00, 0x01, 0x02, 0x04, 0x00 
+                                                            ;// 60 `
+   93 00000145 20 54 54 
+              54 78            DCB              0x20, 0x54, 0x54, 0x54, 0x78 
+                                                            ;// 61 a
+   94 0000014A 7F 48 44 
+              44 38            DCB              0x7f, 0x48, 0x44, 0x44, 0x38 
+                                                            ;// 62 b
+   95 0000014F 38 44 44 
+              44 20            DCB              0x38, 0x44, 0x44, 0x44, 0x20 
+                                                            ;// 63 c
+   96 00000154 38 44 44 
+
+
+
+ARM Macro Assembler    Page 5 
+
+
+              48 7F            DCB              0x38, 0x44, 0x44, 0x48, 0x7f 
+                                                            ;// 64 d
+   97 00000159 38 54 54 
+              54 18            DCB              0x38, 0x54, 0x54, 0x54, 0x18 
+                                                            ;// 65 e
+   98 0000015E 08 7E 09 
+              01 02            DCB              0x08, 0x7e, 0x09, 0x01, 0x02 
+                                                            ;// 66 f
+   99 00000163 0C 52 52 
+              52 3E            DCB              0x0c, 0x52, 0x52, 0x52, 0x3e 
+                                                            ;// 67 g
+  100 00000168 7F 08 04 
+              04 78            DCB              0x7f, 0x08, 0x04, 0x04, 0x78 
+                                                            ;// 68 h
+  101 0000016D 00 44 7D 
+              40 00            DCB              0x00, 0x44, 0x7d, 0x40, 0x00 
+                                                            ;// 69 i
+  102 00000172 20 40 44 
+              3D 00            DCB              0x20, 0x40, 0x44, 0x3d, 0x00 
+                                                            ;// 6a j
+  103 00000177 7F 10 28 
+              44 00            DCB              0x7f, 0x10, 0x28, 0x44, 0x00 
+                                                            ;// 6b k
+  104 0000017C 00 41 7F 
+              40 00            DCB              0x00, 0x41, 0x7f, 0x40, 0x00 
+                                                            ;// 6c l
+  105 00000181 7C 04 18 
+              04 78            DCB              0x7c, 0x04, 0x18, 0x04, 0x78 
+                                                            ;// 6d m
+  106 00000186 7C 08 04 
+              04 78            DCB              0x7c, 0x08, 0x04, 0x04, 0x78 
+                                                            ;// 6e n
+  107 0000018B 38 44 44 
+              44 38            DCB              0x38, 0x44, 0x44, 0x44, 0x38 
+                                                            ;// 6f o
+  108 00000190 7C 14 14 
+              14 08            DCB              0x7c, 0x14, 0x14, 0x14, 0x08 
+                                                            ;// 70 p
+  109 00000195 08 14 14 
+              18 7C            DCB              0x08, 0x14, 0x14, 0x18, 0x7c 
+                                                            ;// 71 q
+  110 0000019A 7C 08 04 
+              04 08            DCB              0x7c, 0x08, 0x04, 0x04, 0x08 
+                                                            ;// 72 r
+  111 0000019F 48 54 54 
+              54 20            DCB              0x48, 0x54, 0x54, 0x54, 0x20 
+                                                            ;// 73 s
+  112 000001A4 04 3F 44 
+              40 20            DCB              0x04, 0x3f, 0x44, 0x40, 0x20 
+                                                            ;// 74 t
+  113 000001A9 3C 40 40 
+              20 7C            DCB              0x3c, 0x40, 0x40, 0x20, 0x7c 
+                                                            ;// 75 u
+  114 000001AE 1C 20 40 
+              20 1C            DCB              0x1c, 0x20, 0x40, 0x20, 0x1c 
+                                                            ;// 76 v
+  115 000001B3 3C 40 30 
+              40 3C            DCB              0x3c, 0x40, 0x30, 0x40, 0x3c 
+                                                            ;// 77 w
+
+
+
+ARM Macro Assembler    Page 6 
+
+
+  116 000001B8 44 28 10 
+              28 44            DCB              0x44, 0x28, 0x10, 0x28, 0x44 
+                                                            ;// 78 x
+  117 000001BD 0C 50 50 
+              50 3C            DCB              0x0c, 0x50, 0x50, 0x50, 0x3c 
+                                                            ;// 79 y
+  118 000001C2 44 64 54 
+              4C 44            DCB              0x44, 0x64, 0x54, 0x4c, 0x44 
+                                                            ;// 7a z
+  119 000001C7 00 08 36 
+              41 00            DCB              0x00, 0x08, 0x36, 0x41, 0x00 
+                                                            ;// 7b {
+  120 000001CC 00 00 7F 
+              00 00            DCB              0x00, 0x00, 0x7f, 0x00, 0x00 
+                                                            ;// 7c |
+  121 000001D1 00 41 36 
+              08 00            DCB              0x00, 0x41, 0x36, 0x08, 0x00 
+                                                            ;// 7d }
+  122 000001D6 10 08 08 
+              10 08            DCB              0x10, 0x08, 0x08, 0x10, 0x08 
+                                                            ;// 7e ~
+  123 000001DB         
+  124 000001DB 00              SPACE            1           ; added for padding
+                                                            
+  125 000001DC         
+  126 000001DC B403    SCR_BYTE
+                               PUSH             {R0,R1}
+  127 000001DE 4927    BYTELOOP
+                               LDR              R1,=SSI2_SR ; FIFO NOT FULL YET
+                                                            
+  128 000001E0 6808            LDR              R0,[R1]
+  129 000001E2 F010 0002       ANDS             R0,R0,#0x02
+  130 000001E6 D0FA            BEQ              BYTELOOP
+  131 000001E8 4925            LDR              R1,=SSI2_DR
+  132 000001EA 700D            STRB             R5,[R1]
+  133 000001EC BC03            POP              {R0,R1}
+  134 000001EE 4770            BX               LR
+  135 000001F0         
+  136 000001F0         
+  137 000001F0         ; DISPLAY ASCII CHARACTER ON R5
+  138 000001F0 B51F    SCR_CHAR
+                               PUSH             {R0-R4,LR}
+  139 000001F2 4924            LDR              R1,=GPIO_PORTB_DATA ; DATA MODE
+                                                            
+  140 000001F4 6808            LDR              R0,[R1]
+  141 000001F6 F040 0040       ORR              R0,#0x40    ; PB 3
+  142 000001FA 6008            STR              R0,[R1]
+  143 000001FC 4922            LDR              R1,=ASCII
+  144 000001FE F1A5 0220       SUB              R2,R5,#0x20 ; SUBSTITUDE THE AS
+                                                            CI OFFSET
+  145 00000202 F04F 0305       MOV              R3,#0x05
+  146 00000206 FB02 F203       MUL              R2,R2,R3    ; EACH CHAR IS 5 BY
+                                                            TE 
+  147 0000020A 4411            ADD              R1,R1,R2
+  148 0000020C F04F 0005       MOV              R0,#0x05
+  149 00000210         
+  150 00000210 F811 5B01 
+                       DISP_CHAR
+                               LDRB             R5,[R1],#1
+
+
+
+ARM Macro Assembler    Page 7 
+
+
+  151 00000214 F7FF FFFE       BL               SCR_BYTE
+  152 00000218 1E40            SUBS             R0,R0,#1
+  153 0000021A D1F9            BNE              DISP_CHAR
+  154 0000021C         
+  155 0000021C F04F 0500       MOV              R5,#0X00    ; SPACE AFTER
+  156 00000220 F7FF FFFE       BL               SCR_BYTE
+  157 00000224         
+  158 00000224 4915    CHAREND LDR              R1,=SSI2_SR
+  159 00000226 6808            LDR              R0,[R1]
+  160 00000228 F010 0010       ANDS             R0,R0,#0x10 ; CHECK BUSY
+  161 0000022C D1FA            BNE              CHAREND
+  162 0000022E         
+  163 0000022E E8BD 401F       POP              {R0-R4,LR}
+  164 00000232 4770            BX               LR
+  165 00000234         
+  166 00000234         ; SET THE CURSOR, X ON R0, Y ON R1
+  167 00000234 B53F    SCR_XY  PUSH             {R0-R5,LR}
+  168 00000236         
+  169 00000236 B403            PUSH             {R0-R1}
+  170 00000238 4912            LDR              R1,=GPIO_PORTB_DATA 
+                                                            ; COMMAND MODE
+  171 0000023A 6808            LDR              R0,[R1]
+  172 0000023C F020 0040       BIC              R0,#0x40
+  173 00000240 6008            STR              R0,[R1]
+  174 00000242 F04F 0520       MOV              R5,#0x20    ; H=0
+  175 00000246 F7FF FFFE       BL               SCR_BYTE
+  176 0000024A BC03            POP              {R0-R1}
+  177 0000024C 4605            MOV              R5,R0       ; R0 HOLDS X
+  178 0000024E F045 0580       ORR              R5,#0x80
+  179 00000252 F7FF FFFE       BL               SCR_BYTE
+  180 00000256 460D            MOV              R5,R1       ; R1 HOLDS Y
+  181 00000258 F045 0540       ORR              R5,#0x40
+  182 0000025C F7FF FFFE       BL               SCR_BYTE
+  183 00000260         
+  184 00000260 4906    XYEND   LDR              R1,=SSI2_SR ; wait until SSI is
+                                                             done
+  185 00000262 6808            LDR              R0,[R1]
+  186 00000264 F010 0010       ANDS             R0,R0,#0x10
+  187 00000268 D1FA            BNE              XYEND
+  188 0000026A         
+  189 0000026A 4906            LDR              R1,=GPIO_PORTB_DATA 
+                                                            ; BACK TO DATA MODE
+                                                            
+  190 0000026C 6808            LDR              R0,[R1]
+  191 0000026E F040 0040       ORR              R0,#0x40
+  192 00000272 6008            STR              R0,[R1]
+  193 00000274 E8BD 403F       POP              {R0-R5,LR}
+  194 00000278 4770            BX               LR
+  195 0000027A         
+  196 0000027A 00 00           ALIGN
+  197 0000027C                 END
+              4000800C 
+              40008008 
+              400043FC 
+              00000000 
+Command Line: --debug --xref --diag_suppress=9931 --cpu=Cortex-M4.fp --apcs=int
+erwork --depend=.\objects\basim_ayar.d -o.\objects\basim_ayar.o -IC:\Users\user
+\Desktop\DENEME4\trial\RTE -IC:\Keil_v5\ARM\PACK\ARM\CMSIS\5.0.0-Beta12\CMSIS\I
+nclude -IC:\Keil_v5\ARM\PACK\Keil\TM4C_DFP\1.1.0\Device\Include\TM4C123 --prede
+
+
+
+ARM Macro Assembler    Page 8 
+
+
+fine="__EVAL SETA 1" --predefine="__UVISION_VERSION SETA 521" --predefine="_RTE
+_ SETA 1" --predefine="TM4C123GH6PM SETA 1" --list=.\listings\basim_ayar.lst ba
+sim_ayar.s
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+Relocatable symbols
+
+ASCII 00000000
+
+Symbol: ASCII
+   Definitions
+      At line 28 in file basim_ayar.s
+   Uses
+      At line 143 in file basim_ayar.s
+Comment: ASCII used once
+BYTELOOP 000001DE
+
+Symbol: BYTELOOP
+   Definitions
+      At line 127 in file basim_ayar.s
+   Uses
+      At line 130 in file basim_ayar.s
+Comment: BYTELOOP used once
+CHAREND 00000224
+
+Symbol: CHAREND
+   Definitions
+      At line 158 in file basim_ayar.s
+   Uses
+      At line 161 in file basim_ayar.s
+Comment: CHAREND used once
+DISP_CHAR 00000210
+
+Symbol: DISP_CHAR
+   Definitions
+      At line 150 in file basim_ayar.s
+   Uses
+      At line 153 in file basim_ayar.s
+Comment: DISP_CHAR used once
+SCR_BYTE 000001DC
+
+Symbol: SCR_BYTE
+   Definitions
+      At line 126 in file basim_ayar.s
+   Uses
+      At line 22 in file basim_ayar.s
+      At line 151 in file basim_ayar.s
+      At line 156 in file basim_ayar.s
+      At line 175 in file basim_ayar.s
+      At line 179 in file basim_ayar.s
+      At line 182 in file basim_ayar.s
+
+SCR_CHAR 000001F0
+
+Symbol: SCR_CHAR
+   Definitions
+      At line 138 in file basim_ayar.s
+   Uses
+      At line 21 in file basim_ayar.s
+Comment: SCR_CHAR used once
+SCR_XY 00000234
+
+Symbol: SCR_XY
+   Definitions
+      At line 167 in file basim_ayar.s
+   Uses
+
+
+
+ARM Macro Assembler    Page 2 Alphabetic symbol ordering
+Relocatable symbols
+
+      At line 20 in file basim_ayar.s
+Comment: SCR_XY used once
+XYEND 00000260
+
+Symbol: XYEND
+   Definitions
+      At line 184 in file basim_ayar.s
+   Uses
+      At line 187 in file basim_ayar.s
+Comment: XYEND used once
+screen 00000000
+
+Symbol: screen
+   Definitions
+      At line 17 in file basim_ayar.s
+   Uses
+      None
+Comment: screen unused
+9 symbols
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+Absolute symbols
+
+GPIO_PORTB_DATA 400043FC
+
+Symbol: GPIO_PORTB_DATA
+   Definitions
+      At line 12 in file basim_ayar.s
+   Uses
+      At line 139 in file basim_ayar.s
+      At line 170 in file basim_ayar.s
+      At line 189 in file basim_ayar.s
+
+SSI2_DR 40008008
+
+Symbol: SSI2_DR
+   Definitions
+      At line 13 in file basim_ayar.s
+   Uses
+      At line 131 in file basim_ayar.s
+Comment: SSI2_DR used once
+SSI2_SR 4000800C
+
+Symbol: SSI2_SR
+   Definitions
+      At line 14 in file basim_ayar.s
+   Uses
+      At line 127 in file basim_ayar.s
+      At line 158 in file basim_ayar.s
+      At line 184 in file basim_ayar.s
+
+3 symbols
+349 symbols in table
